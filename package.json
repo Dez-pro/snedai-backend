@@ -4,6 +4,7 @@
   "description": "",
   "main": "serveur.js",
   "scripts": {
+    "postinstall": "node scripts/setupPredictionPython.js",
     "start": "node serveur.js",
     "server": "nodemon serveur.js",
     "prediction:train": "node scripts/predictionPythonRunner.js train",
