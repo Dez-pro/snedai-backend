@@ -8,12 +8,19 @@ const REQUEST_TIMEOUT_MS = Number(process.env.PREDICTION_PYTHON_TIMEOUT_MS || 15
 const STARTUP_TIMEOUT_MS = Number(process.env.PREDICTION_PYTHON_STARTUP_TIMEOUT_MS || 120000);
 const HEALTH_CHECK_INTERVAL_MS = 1500;
 const AUTO_START_PYTHON_ENGINE = process.env.PREDICTION_PYTHON_AUTO_START !== "false";
-const PYTHON_VENV_EXECUTABLE = path.join(
+const PYTHON_VENV_WINDOWS_EXECUTABLE = path.join(
   process.cwd(),
   "prediction_python",
   ".venv",
   "Scripts",
   "python.exe"
+);
+const PYTHON_VENV_UNIX_EXECUTABLE = path.join(
+  process.cwd(),
+  "prediction_python",
+  ".venv",
+  "bin",
+  "python"
 );
 const PYTHON_API_ENTRYPOINT = path.join(process.cwd(), "prediction_python", "02_api.py");
 
@@ -59,15 +66,31 @@ async function pingPythonApi() {
 }
 
 function getPythonLaunchCommand() {
-  if (fs.existsSync(PYTHON_VENV_EXECUTABLE)) {
+  const envExecutable = process.env.PREDICTION_PYTHON_EXECUTABLE?.trim();
+
+  if (envExecutable) {
     return {
-      command: PYTHON_VENV_EXECUTABLE,
+      command: envExecutable,
+      args: [PYTHON_API_ENTRYPOINT],
+    };
+  }
+
+  if (fs.existsSync(PYTHON_VENV_WINDOWS_EXECUTABLE)) {
+    return {
+      command: PYTHON_VENV_WINDOWS_EXECUTABLE,
+      args: [PYTHON_API_ENTRYPOINT],
+    };
+  }
+
+  if (fs.existsSync(PYTHON_VENV_UNIX_EXECUTABLE)) {
+    return {
+      command: PYTHON_VENV_UNIX_EXECUTABLE,
       args: [PYTHON_API_ENTRYPOINT],
     };
   }
 
   return {
-    command: "python",
+    command: process.platform === "win32" ? "python" : "python3",
     args: [PYTHON_API_ENTRYPOINT],
   };
 }
@@ -134,9 +157,26 @@ async function ensurePythonApiAvailable() {
     } else {
       pythonProcess = spawn(command, args, {
         cwd: process.cwd(),
-        env: { ...process.env },
-        stdio: "ignore",
+        env: {
+          ...process.env,
+          PYTHONUNBUFFERED: "1",
+        },
+        stdio: ["ignore", "pipe", "pipe"],
         windowsHide: true,
+      });
+
+      pythonProcess.stdout?.on("data", (chunk) => {
+        const message = chunk.toString().trim();
+        if (message) {
+          console.log(`[prediction-python] ${message}`);
+        }
+      });
+
+      pythonProcess.stderr?.on("data", (chunk) => {
+        const message = chunk.toString().trim();
+        if (message) {
+          console.error(`[prediction-python] ${message}`);
+        }
       });
 
       pythonProcess.on("error", (error) => {

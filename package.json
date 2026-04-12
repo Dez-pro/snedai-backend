@@ -6,8 +6,8 @@
   "scripts": {
     "start": "node serveur.js",
     "server": "nodemon serveur.js",
-    "prediction:train": "prediction_python\\.venv\\Scripts\\python.exe prediction_python\\01_train_models.py",
-    "prediction:api": "prediction_python\\.venv\\Scripts\\python.exe prediction_python\\02_api.py"
+    "prediction:train": "node scripts/predictionPythonRunner.js train",
+    "prediction:api": "node scripts/predictionPythonRunner.js api"
   },
   "keywords": [],
   "author": "",
