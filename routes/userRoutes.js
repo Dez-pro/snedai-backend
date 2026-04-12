@@ -5,6 +5,8 @@ import {
   adminLogin,
   forgetPassword,
   resetPassword,
+  getCurrentUser,
+  updateUserRole,
 } from "./../controllers/userController.js";
 import { getEmbedConfig } from "../controllers/powerbiController.js";
 import authMiddleware from "../middleware/authMiddleware.js";
@@ -20,12 +22,11 @@ userRouter.post('/admin', adminLogin);
 userRouter.post('/forgetpassword', forgetPassword);
 userRouter.post('/resetpassword/:token', resetPassword);
 
-// Power BI embed config sécurisée
-userRouter.get('/powerbi/embed-config', getEmbedConfig);
+// Profil et rôle utilisateur
+userRouter.get('/me', authMiddleware, getCurrentUser);
+userRouter.post('/update-role', authMiddleware, updateUserRole);
 
-// Exemple de route protégée
-userRouter.get('/me', authMiddleware, (req, res) => {
-  res.json({ success: true, userId: req.user.id });
-});
+// Power BI embed config sécurisée
+userRouter.get('/powerbi/embed-config', authMiddleware, getEmbedConfig);
 
 export default userRouter;

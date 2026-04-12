@@ -1,0 +1,289 @@
+{
+  "generated_at": "2026-04-11T17:17:41.367423+00:00",
+  "dataset": {
+    "file": "dataset_prediction_fin_2026.xlsx",
+    "path": "C:\\Users\\Cedrick.KONE\\OneDrive - Snedai\\Bureau\\airdata-backend\\snedai-backend\\data\\dataset_prediction_fin_2026.xlsx",
+    "training_rows": 1648
+  },
+  "coverage": {
+    "historical_start": "2024-01-01",
+    "historical_end": "2026-04-11",
+    "forecast_start": "2026-04-12",
+    "forecast_end": "2026-12-31"
+  },
+  "feature_columns": [
+    "site_code",
+    "month",
+    "day_of_week",
+    "is_weekend",
+    "day_of_year",
+    "temperature_c_lag1",
+    "temperature_c_roll3",
+    "temperature_c_roll7",
+    "humidity_pct_lag1",
+    "humidity_pct_roll3",
+    "humidity_pct_roll7",
+    "pressure_hpa_lag1",
+    "pressure_hpa_roll3",
+    "pressure_hpa_roll7",
+    "so2_ug_m3_lag1",
+    "so2_ug_m3_roll3",
+    "so2_ug_m3_roll7",
+    "co_mg_m3_lag1",
+    "co_mg_m3_roll3",
+    "co_mg_m3_roll7",
+    "no2_ug_m3_lag1",
+    "no2_ug_m3_roll3",
+    "no2_ug_m3_roll7",
+    "pm1_ug_m3_lag1",
+    "pm1_ug_m3_roll3",
+    "pm1_ug_m3_roll7",
+    "pm25_ug_m3_lag1",
+    "pm25_ug_m3_roll3",
+    "pm25_ug_m3_roll7",
+    "pm10_ug_m3_lag1",
+    "pm10_ug_m3_roll3",
+    "pm10_ug_m3_roll7",
+    "h2s_ug_m3_lag1",
+    "h2s_ug_m3_roll3",
+    "h2s_ug_m3_roll7",
+    "co2_mg_m3_lag1",
+    "co2_mg_m3_roll3",
+    "co2_mg_m3_roll7"
+  ],
+  "sites": [
+    {
+      "site": "MISSION ANOUMABO",
+      "site_id": "S002",
+      "zone_id": "Z002",
+      "zone": "MISSION ANOUMABO",
+      "capteur_id": "0d0d8c27",
+      "altitude_m": 105.244,
+      "longitude": -3.97957,
+      "latitude": 5.305828,
+      "site_code": 0
+    },
+    {
+      "site": "MISSION ZI",
+      "site_id": "S001",
+      "zone_id": "Z001",
+      "zone": "MISSION ZI",
+      "capteur_id": "0d0d8c27",
+      "altitude_m": 112.975,
+      "longitude": -4.085678,
+      "latitude": 5.365591,
+      "site_code": 1
+    }
+  ],
+  "targets": {
+    "temperature_c": {
+      "name": "Temperature",
+      "unit": "deg C",
+      "source_column": "Temperature ℃",
+      "target_column": "target_temperature_c_j1",
+      "model_file": "model_temperature_c.joblib",
+      "scaler_file": "model_temperature_c_scaler.joblib",
+      "train_rows": 1152,
+      "validation_rows": 248,
+      "test_rows": 248,
+      "min_target": 17.689,
+      "max_target": 27.359,
+      "mean_target": 22.250104166666667,
+      "metrics": {
+        "mae": 0.4831,
+        "rmse": 0.6209,
+        "r2": 0.8999
+      }
+    },
+    "humidity_pct": {
+      "name": "Humidite",
+      "unit": "%",
+      "source_column": "Humidity %",
+      "target_column": "target_humidity_pct_j1",
+      "model_file": "model_humidity_pct.joblib",
+      "scaler_file": "model_humidity_pct_scaler.joblib",
+      "train_rows": 1152,
+      "validation_rows": 248,
+      "test_rows": 248,
+      "min_target": 45.0,
+      "max_target": 92.662,
+      "mean_target": 70.27345920138889,
+      "metrics": {
+        "mae": 2.3627,
+        "rmse": 2.9399,
+        "r2": 0.9147
+      }
+    },
+    "pressure_hpa": {
+      "name": "Pression",
+      "unit": "hPa",
+      "source_column": "Pressure hPa",
+      "target_column": "target_pressure_hpa_j1",
+      "model_file": "model_pressure_hpa.joblib",
+      "scaler_file": "model_pressure_hpa_scaler.joblib",
+      "train_rows": 1152,
+      "validation_rows": 248,
+      "test_rows": 248,
+      "min_target": 987.43,
+      "max_target": 1009.33,
+      "mean_target": 997.1201710069444,
+      "metrics": {
+        "mae": 0.8054,
+        "rmse": 1.0171,
+        "r2": 0.9619
+      }
+    },
+    "so2_ug_m3": {
+      "name": "SO2",
+      "unit": "ug/m3",
+      "source_column": "SO2 μg/m³",
+      "target_column": "target_so2_ug_m3_j1",
+      "model_file": "model_so2_ug_m3.joblib",
+      "scaler_file": "model_so2_ug_m3_scaler.joblib",
+      "train_rows": 1152,
+      "validation_rows": 248,
+      "test_rows": 248,
+      "min_target": 22.506,
+      "max_target": 39.421,
+      "mean_target": 30.565890625,
+      "metrics": {
+        "mae": 0.8133,
+        "rmse": 1.0173,
+        "r2": 0.9466
+      }
+    },
+    "co_mg_m3": {
+      "name": "CO",
+      "unit": "mg/m3",
+      "source_column": "CO mg/m³",
+      "target_column": "target_co_mg_m3_j1",
+      "model_file": "model_co_mg_m3.joblib",
+      "scaler_file": "model_co_mg_m3_scaler.joblib",
+      "train_rows": 1152,
+      "validation_rows": 248,
+      "test_rows": 248,
+      "min_target": 0.566,
+      "max_target": 1.729,
+      "mean_target": 1.1096953125000002,
+      "metrics": {
+        "mae": 0.0499,
+        "rmse": 0.0628,
+        "r2": 0.953
+      }
+    },
+    "no2_ug_m3": {
+      "name": "NO2",
+      "unit": "ug/m3",
+      "source_column": "NO2 μg/m³",
+      "target_column": "target_no2_ug_m3_j1",
+      "model_file": "model_no2_ug_m3.joblib",
+      "scaler_file": "model_no2_ug_m3_scaler.joblib",
+      "train_rows": 1152,
+      "validation_rows": 248,
+      "test_rows": 248,
+      "min_target": 90.189,
+      "max_target": 179.346,
+      "mean_target": 129.45604340277777,
+      "metrics": {
+        "mae": 3.8612,
+        "rmse": 4.7461,
+        "r2": 0.9518
+      }
+    },
+    "pm1_ug_m3": {
+      "name": "PM1.0",
+      "unit": "ug/m3",
+      "source_column": "PM1.0 μg/m³",
+      "target_column": "target_pm1_ug_m3_j1",
+      "model_file": "model_pm1_ug_m3.joblib",
+      "scaler_file": "model_pm1_ug_m3_scaler.joblib",
+      "train_rows": 1152,
+      "validation_rows": 248,
+      "test_rows": 248,
+      "min_target": 3.0,
+      "max_target": 33.593,
+      "mean_target": 16.16099652777778,
+      "metrics": {
+        "mae": 1.689,
+        "rmse": 2.1508,
+        "r2": 0.8863
+      }
+    },
+    "pm25_ug_m3": {
+      "name": "PM2.5",
+      "unit": "ug/m3",
+      "source_column": "PM2.5 μg/m³",
+      "target_column": "target_pm25_ug_m3_j1",
+      "model_file": "model_pm25_ug_m3.joblib",
+      "scaler_file": "model_pm25_ug_m3_scaler.joblib",
+      "train_rows": 1152,
+      "validation_rows": 248,
+      "test_rows": 248,
+      "min_target": 6.0,
+      "max_target": 53.31,
+      "mean_target": 26.566628472222224,
+      "metrics": {
+        "mae": 2.4142,
+        "rmse": 3.0038,
+        "r2": 0.9136
+      }
+    },
+    "pm10_ug_m3": {
+      "name": "PM10",
+      "unit": "ug/m3",
+      "source_column": "PM10 μg/m³",
+      "target_column": "target_pm10_ug_m3_j1",
+      "model_file": "model_pm10_ug_m3.joblib",
+      "scaler_file": "model_pm10_ug_m3_scaler.joblib",
+      "train_rows": 1152,
+      "validation_rows": 248,
+      "test_rows": 248,
+      "min_target": 7.425,
+      "max_target": 76.752,
+      "mean_target": 37.28955729166667,
+      "metrics": {
+        "mae": 3.3737,
+        "rmse": 4.3634,
+        "r2": 0.8847
+      }
+    },
+    "h2s_ug_m3": {
+      "name": "H2S",
+      "unit": "ug/m3",
+      "source_column": "H2S μg/m³",
+      "target_column": "target_h2s_ug_m3_j1",
+      "model_file": "model_h2s_ug_m3.joblib",
+      "scaler_file": "model_h2s_ug_m3_scaler.joblib",
+      "train_rows": 1152,
+      "validation_rows": 248,
+      "test_rows": 248,
+      "min_target": 75.419,
+      "max_target": 233.247,
+      "mean_target": 151.1565269097222,
+      "metrics": {
+        "mae": 5.5172,
+        "rmse": 6.954,
+        "r2": 0.9823
+      }
+    },
+    "co2_mg_m3": {
+      "name": "CO2",
+      "unit": "mg/m3",
+      "source_column": "CO2 mg/m³",
+      "target_column": "target_co2_mg_m3_j1",
+      "model_file": "model_co2_mg_m3.joblib",
+      "scaler_file": "model_co2_mg_m3_scaler.joblib",
+      "train_rows": 1152,
+      "validation_rows": 248,
+      "test_rows": 248,
+      "min_target": 513.982,
+      "max_target": 604.979,
+      "mean_target": 559.3500026041667,
+      "metrics": {
+        "mae": 8.3667,
+        "rmse": 10.3045,
+        "r2": 0.5444
+      }
+    }
+  }
+}

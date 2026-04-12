@@ -7,9 +7,63 @@ import userModel from "../models/userModel.js";
 
 dotenv.config(); // ⚠️ Toujours configurer dotenv en premier
 
+const VALID_ROLES = ["citoyen", "chercheur", "décideur", "autorité"];
+
 // --- Création token JWT ---
-const createToken = (id) => {
-  return jwt.sign({ id }, process.env.JWT_SECRET, { expiresIn: "30d" });
+const createToken = (user) => {
+  return jwt.sign({ id: user._id, role: user.role }, process.env.JWT_SECRET, { expiresIn: "30d" });
+};
+
+const serializeUser = (user) => ({
+  id: user._id,
+  name: user.name,
+  email: user.email,
+  role: user.role,
+  city: user.city,
+});
+
+const isValidRole = (role) => VALID_ROLES.includes(role);
+
+const normalizeRole = (role) => (typeof role === "string" ? role.trim() : "");
+
+// --- Profil utilisateur connecté ---
+const getCurrentUser = async (req, res) => {
+  try {
+    const user = await userModel.findById(req.user.id).select("-password -resetPasswordToken -resetPasswordExpires");
+
+    if (!user) {
+      return res.status(404).json({ success: false, message: "Utilisateur introuvable." });
+    }
+
+    res.json({ success: true, user: serializeUser(user) });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ success: false, message: "Erreur serveur." });
+  }
+};
+
+// --- Mise à jour du rôle ---
+const updateUserRole = async (req, res) => {
+  try {
+    const role = normalizeRole(req.body.role);
+
+    if (!isValidRole(role)) {
+      return res.status(400).json({ success: false, message: "Rôle invalide." });
+    }
+
+    const user = await userModel.findById(req.user.id);
+    if (!user) {
+      return res.status(404).json({ success: false, message: "Utilisateur introuvable." });
+    }
+
+    user.role = role;
+    await user.save();
+
+    res.json({ success: true, message: "Rôle mis à jour avec succès.", user: serializeUser(user) });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ success: false, message: "Erreur serveur." });
+  }
 };
 
 // --- Login utilisateur ---
@@ -23,12 +77,12 @@ const loginUser = async (req, res) => {
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) return res.json({ success: false, message: "Mot de passe incorrect." });
 
-    const token = createToken(user._id);
+    const token = createToken(user);
 
     res.json({
       success: true,
       token,
-      user: { id: user._id, name: user.name, email: user.email, role: user.role },
+      user: serializeUser(user),
     });
   } catch (error) {
     console.error(error);
@@ -40,6 +94,7 @@ const loginUser = async (req, res) => {
 const registerUser = async (req, res) => {
   try {
     const { name, email, password, city, role } = req.body;
+    const normalizedRole = normalizeRole(role) || "citoyen";
 
     if (await userModel.findOne({ email })) {
       return res.json({ success: false, message: "L'utilisateur est déjà inscrit !" });
@@ -48,6 +103,7 @@ const registerUser = async (req, res) => {
     if (!validator.isEmail(email)) return res.json({ success: false, message: "Adresse email invalide !" });
     if (password.length < 8) return res.json({ success: false, message: "Mot de passe trop court (8 caractères min)." });
     if (!city || !city.trim()) return res.json({ success: false, message: "Veuillez renseigner votre ville." });
+    if (!isValidRole(normalizedRole)) return res.json({ success: false, message: "Rôle invalide." });
 
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(password, salt);
@@ -57,16 +113,16 @@ const registerUser = async (req, res) => {
       email, 
       password: hashedPassword, 
       city: city.trim(), 
-      role: role || "citoyen" 
+      role: normalizedRole,
     });
 
     const user = await newUser.save();
-    const token = createToken(user._id);
+    const token = createToken(user);
 
     res.json({
       success: true,
       token,
-      user: { id: user._id, name: user.name, email: user.email, role: user.role },
+      user: serializeUser(user),
     });
   } catch (error) {
     console.error(error);
@@ -140,4 +196,4 @@ const resetPassword = async (req, res) => {
   }
 };
 
-export { loginUser, registerUser, adminLogin, forgetPassword, resetPassword };
+export { loginUser, registerUser, adminLogin, forgetPassword, resetPassword, getCurrentUser, updateUserRole };

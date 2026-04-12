@@ -3,12 +3,11 @@ import mongoose from "mongoose";
 const connectDB = async () => {
   try {
     const uri = process.env.MONGO_URI;
-    console.log("👉 Tentative de connexion avec :", uri);
+    if (!uri) {
+      throw new Error("MONGO_URI manquant dans les variables d'environnement.");
+    }
 
-    await mongoose.connect(uri, {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
-    });
+    await mongoose.connect(uri);
 
     console.log("✅ MongoDB connecté !");
   } catch (error) {

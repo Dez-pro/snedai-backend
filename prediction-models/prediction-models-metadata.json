@@ -1,0 +1,220 @@
+{
+  "dataset_version": "dataset_prediction_fin_2026",
+  "dataset_file": "dataset_prediction_fin_2026.xlsx",
+  "coverage": {
+    "historical_start": "2024-01-01",
+    "historical_end": "2026-04-11",
+    "forecast_start": "2026-04-12",
+    "forecast_end": "2026-12-31"
+  },
+  "generated_at": "2026-04-11T16:49:25.527Z",
+  "sites": [
+    {
+      "site": "MISSION ZI",
+      "siteId": "S001",
+      "zoneId": "Z001",
+      "zone": "MISSION ZI",
+      "capteurId": "0d0d8c27",
+      "models": [
+        {
+          "key": "temperature_c",
+          "label": "Temperature",
+          "unit": "deg C",
+          "file": "model_mission-zi_temperature_c.json"
+        },
+        {
+          "key": "humidity_pct",
+          "label": "Humidite",
+          "unit": "%",
+          "file": "model_mission-zi_humidity_pct.json"
+        },
+        {
+          "key": "pressure_hpa",
+          "label": "Pression",
+          "unit": "hPa",
+          "file": "model_mission-zi_pressure_hpa.json"
+        },
+        {
+          "key": "so2_ug_m3",
+          "label": "SO2",
+          "unit": "ug/m3",
+          "file": "model_mission-zi_so2_ug_m3.json"
+        },
+        {
+          "key": "co_mg_m3",
+          "label": "CO",
+          "unit": "mg/m3",
+          "file": "model_mission-zi_co_mg_m3.json"
+        },
+        {
+          "key": "no2_ug_m3",
+          "label": "NO2",
+          "unit": "ug/m3",
+          "file": "model_mission-zi_no2_ug_m3.json"
+        },
+        {
+          "key": "pm1_ug_m3",
+          "label": "PM1.0",
+          "unit": "ug/m3",
+          "file": "model_mission-zi_pm1_ug_m3.json"
+        },
+        {
+          "key": "pm25_ug_m3",
+          "label": "PM2.5",
+          "unit": "ug/m3",
+          "file": "model_mission-zi_pm25_ug_m3.json"
+        },
+        {
+          "key": "pm10_ug_m3",
+          "label": "PM10",
+          "unit": "ug/m3",
+          "file": "model_mission-zi_pm10_ug_m3.json"
+        },
+        {
+          "key": "h2s_ug_m3",
+          "label": "H2S",
+          "unit": "ug/m3",
+          "file": "model_mission-zi_h2s_ug_m3.json"
+        },
+        {
+          "key": "co2_mg_m3",
+          "label": "CO2",
+          "unit": "mg/m3",
+          "file": "model_mission-zi_co2_mg_m3.json"
+        }
+      ]
+    },
+    {
+      "site": "MISSION ANOUMABO",
+      "siteId": "S002",
+      "zoneId": "Z002",
+      "zone": "MISSION ANOUMABO",
+      "capteurId": "0d0d8c27",
+      "models": [
+        {
+          "key": "temperature_c",
+          "label": "Temperature",
+          "unit": "deg C",
+          "file": "model_mission-anoumabo_temperature_c.json"
+        },
+        {
+          "key": "humidity_pct",
+          "label": "Humidite",
+          "unit": "%",
+          "file": "model_mission-anoumabo_humidity_pct.json"
+        },
+        {
+          "key": "pressure_hpa",
+          "label": "Pression",
+          "unit": "hPa",
+          "file": "model_mission-anoumabo_pressure_hpa.json"
+        },
+        {
+          "key": "so2_ug_m3",
+          "label": "SO2",
+          "unit": "ug/m3",
+          "file": "model_mission-anoumabo_so2_ug_m3.json"
+        },
+        {
+          "key": "co_mg_m3",
+          "label": "CO",
+          "unit": "mg/m3",
+          "file": "model_mission-anoumabo_co_mg_m3.json"
+        },
+        {
+          "key": "no2_ug_m3",
+          "label": "NO2",
+          "unit": "ug/m3",
+          "file": "model_mission-anoumabo_no2_ug_m3.json"
+        },
+        {
+          "key": "pm1_ug_m3",
+          "label": "PM1.0",
+          "unit": "ug/m3",
+          "file": "model_mission-anoumabo_pm1_ug_m3.json"
+        },
+        {
+          "key": "pm25_ug_m3",
+          "label": "PM2.5",
+          "unit": "ug/m3",
+          "file": "model_mission-anoumabo_pm25_ug_m3.json"
+        },
+        {
+          "key": "pm10_ug_m3",
+          "label": "PM10",
+          "unit": "ug/m3",
+          "file": "model_mission-anoumabo_pm10_ug_m3.json"
+        },
+        {
+          "key": "h2s_ug_m3",
+          "label": "H2S",
+          "unit": "ug/m3",
+          "file": "model_mission-anoumabo_h2s_ug_m3.json"
+        },
+        {
+          "key": "co2_mg_m3",
+          "label": "CO2",
+          "unit": "mg/m3",
+          "file": "model_mission-anoumabo_co2_mg_m3.json"
+        }
+      ]
+    }
+  ],
+  "environmental_metrics": [
+    {
+      "key": "temperature_c",
+      "label": "Temperature",
+      "unit": "deg C"
+    },
+    {
+      "key": "humidity_pct",
+      "label": "Humidite",
+      "unit": "%"
+    },
+    {
+      "key": "pressure_hpa",
+      "label": "Pression",
+      "unit": "hPa"
+    },
+    {
+      "key": "so2_ug_m3",
+      "label": "SO2",
+      "unit": "ug/m3"
+    },
+    {
+      "key": "co_mg_m3",
+      "label": "CO",
+      "unit": "mg/m3"
+    },
+    {
+      "key": "no2_ug_m3",
+      "label": "NO2",
+      "unit": "ug/m3"
+    },
+    {
+      "key": "pm1_ug_m3",
+      "label": "PM1.0",
+      "unit": "ug/m3"
+    },
+    {
+      "key": "pm25_ug_m3",
+      "label": "PM2.5",
+      "unit": "ug/m3"
+    },
+    {
+      "key": "pm10_ug_m3",
+      "label": "PM10",
+      "unit": "ug/m3"
+    },
+    {
+      "key": "h2s_ug_m3",
+      "label": "H2S",
+      "unit": "ug/m3"
+    },
+    {
+      "key": "co2_mg_m3",
+      "label": "CO2",
+      "unit": "mg/m3"
+    }
+  ]
+}
