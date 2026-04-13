@@ -47,6 +47,7 @@ SITE_METADATA: Dict[str, dict] = {}
 HISTORY_MAP: Dict[str, Dict[str, dict]] = {}
 OBSERVED_REFERENCE_MAP: Dict[str, Dict[str, dict]] = {}
 FORECAST_MAP: Dict[str, Dict[str, dict]] = {}
+SITE_SEQUENCE_MAP: Dict[str, List[dict]] = {}
 FEATURE_COLUMNS: List[str] = []
 
 
@@ -213,26 +214,47 @@ def predict_next_day(records: List[dict], site_code: int, target_date: str) -> d
     return predictions
 
 
-def build_forecast_cache(history_df: pd.DataFrame) -> Dict[str, Dict[str, dict]]:
-    coverage = METADATA["coverage"]
+def initialize_forecast_state(history_df: pd.DataFrame) -> tuple[Dict[str, Dict[str, dict]], Dict[str, List[dict]]]:
     forecast_cache: Dict[str, Dict[str, dict]] = {}
+    sequence_map: Dict[str, List[dict]] = {}
 
-    for site_name, site_meta in SITE_METADATA.items():
-        records = build_site_sequence(history_df, site_name)
+    for site_name in SITE_METADATA:
         forecast_cache[site_name] = {}
+        sequence_map[site_name] = build_site_sequence(history_df, site_name)
 
-        current_date = coverage["forecast_start"]
-        while current_date <= coverage["forecast_end"]:
-            predictions = predict_next_day(records, site_meta["site_code"], current_date)
-            forecast_cache[site_name][current_date] = {
-                "source": "forecast",
-                "date": current_date,
-                "values": predictions,
-            }
-            records.append({"date": current_date, "values": predictions})
-            current_date = add_days(current_date, 1)
+    return forecast_cache, sequence_map
 
-    return forecast_cache
+
+def ensure_forecast_available(site_name: str, iso_date: str) -> None:
+    coverage = METADATA["coverage"]
+
+    if iso_date < coverage["forecast_start"]:
+        return
+
+    site_forecasts = FORECAST_MAP.setdefault(site_name, {})
+    if iso_date in site_forecasts:
+        return
+
+    site_sequence = SITE_SEQUENCE_MAP.get(site_name)
+    if not site_sequence:
+        raise HTTPException(
+            status_code=500,
+            detail=f"Sequence de donnees introuvable pour le site {site_name}.",
+        )
+
+    site_meta = SITE_METADATA[site_name]
+    next_date = add_days(site_sequence[-1]["date"], 1)
+
+    while next_date <= iso_date and next_date <= coverage["forecast_end"]:
+        predictions = predict_next_day(site_sequence, site_meta["site_code"], next_date)
+        forecast_record = {
+            "source": "forecast",
+            "date": next_date,
+            "values": predictions,
+        }
+        site_forecasts[next_date] = forecast_record
+        site_sequence.append(forecast_record)
+        next_date = add_days(next_date, 1)
 
 
 def format_prediction_payload(site_name: str, record: dict) -> dict:
@@ -289,6 +311,8 @@ def get_record_for_date(site_name: str, iso_date: str) -> dict:
             detail=f"Aucune donnee historique disponible pour {site_name} a la date {iso_date}.",
         )
 
+    ensure_forecast_available(site_name, iso_date)
+
     forecast_record = FORECAST_MAP.get(site_name, {}).get(iso_date)
     if not forecast_record:
         raise HTTPException(
@@ -302,7 +326,7 @@ def get_record_for_date(site_name: str, iso_date: str) -> dict:
 @app.on_event("startup")
 def startup_load_models() -> None:
     global METADATA, FEATURE_COLUMNS, SITE_METADATA, SITE_ALIASES
-    global HISTORY_MAP, OBSERVED_REFERENCE_MAP, FORECAST_MAP
+    global HISTORY_MAP, OBSERVED_REFERENCE_MAP, FORECAST_MAP, SITE_SEQUENCE_MAP
 
     if not MODELS_METADATA_PATH.exists():
         raise RuntimeError(
@@ -332,12 +356,13 @@ def startup_load_models() -> None:
         observed_reference_df,
         "observed_reference",
     )
-    FORECAST_MAP = build_forecast_cache(history_df)
+    FORECAST_MAP, SITE_SEQUENCE_MAP = initialize_forecast_state(history_df)
 
     logger.info("Dataset charge : %s", DATASET_PATH)
     logger.info("Modeles charges : %s", len(MODELS))
     logger.info("Sites disponibles : %s", list(SITE_METADATA.keys()))
     logger.info("Couverture : %s", METADATA["coverage"])
+    logger.info("Generation des previsions : mode paresseux")
 
 
 @app.get("/")
